@@ -7,12 +7,12 @@ class StudentHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "My QR Code",
           style: TextStyle(
               fontStyle: FontStyle.italic, fontWeight: FontWeight.w400),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: const Color(0xff008346),
       ),
       body: Column(children: <Widget>[
         Container(
@@ -21,21 +21,21 @@ class StudentHomeScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
             child: Container(
-              height: 150,
-              padding: EdgeInsets.all(8.0),
-              child: Image(
-                image: AssetImage("assets/images/logo_jpg.png"),
-                fit: BoxFit.contain,
-              ),
+              height: 140,
+              padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                         color: Colors.white,
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: Offset(0, 3))
                   ]),
+              child: const Image(
+                image: AssetImage("assets/images/logo_jpg.png"),
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
@@ -51,9 +51,9 @@ class StudentHomeScreen extends StatelessWidget {
             child: Card(
               child: SizedBox(
                 width: 350,
-                height: 110,
+                height: 130,
                 child: Center(
-                  child: Column(children: <Widget>[
+                  child: Column(children: const <Widget>[
                     Image(
                       image: AssetImage("assets/images/qr_code_black.png"),
                       height: 80,
@@ -80,9 +80,9 @@ class StudentHomeScreen extends StatelessWidget {
                 child: Card(
                   child: SizedBox(
                     width: 170,
-                    height: 110,
+                    height: 130,
                     child: Center(
-                      child: Column(children: <Widget>[
+                      child: Column(children: const <Widget>[
                         Image(
                           image: AssetImage("assets/images/chalk_board.png"),
                           height: 80,
@@ -107,9 +107,9 @@ class StudentHomeScreen extends StatelessWidget {
                 child: Card(
                   child: SizedBox(
                     width: 170,
-                    height: 110,
+                    height: 130,
                     child: Center(
-                      child: Column(children: <Widget>[
+                      child: Column(children: const <Widget>[
                         Image(
                           image: AssetImage("assets/images/time_machine.png"),
                           height: 80,
@@ -136,9 +136,9 @@ class StudentHomeScreen extends StatelessWidget {
             child: Card(
               child: SizedBox(
                 width: 350,
-                height: 110,
+                height: 130,
                 child: Center(
-                  child: Column(children: <Widget>[
+                  child: Column(children: const <Widget>[
                     Image(
                       image: AssetImage("assets/images/blue_qr_code.png"),
                       height: 80,
@@ -151,6 +151,37 @@ class StudentHomeScreen extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(
+          height: 25,
+        ),
+        SizedBox(
+          height: 70,
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: const <Widget>[
+                    Image(
+                      image: AssetImage("assets/images/home.png"),
+                      height: 40,
+                    ),
+                    Text("Home")
+                  ],
+                ),
+                Column(
+                  children: const [
+                    Image(
+                      image: AssetImage("assets/images/account.png"),
+                      height: 40,
+                    ),
+                    Text("Profile")
+                  ],
+                )
+              ],
+            ),
+          ),
+        )
       ]),
     );
   }

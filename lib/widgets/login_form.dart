@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import 'package:checkin/screens/User_signUp.dart';
 import 'package:checkin/screens/student_home.dart';
 import 'package:flutter/material.dart';
 import '../utils/apis_list.dart';
@@ -111,6 +112,27 @@ class _LoginFormState extends State<LoginForm> {
               },
               child: const Text('Log in'),
             ),
+            Center(
+              child: SizedBox(
+                child: Column(
+                  children: <Widget>[
+                    const Text("DO you have an account?"),
+                    GestureDetector(
+                      onTap: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UserSignUp()),
+                        )
+                      },
+                      child: Text(
+                        "click here to register",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),

@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: const Color(0xff008346),
             elevation: 0.0,
           ),
-          backgroundColor: const Color(0xff008346),
+          backgroundColor: Colors.white,
           body: Column(
             children: <Widget>[
               Container(
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: LoginForm(),
                         ),
-                      )
+                      ),
                     ]),
                   ),
                 ),
