@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../utils/apis_list.dart';
 import 'package:intl/intl.dart';
+import '../models/user_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class UserRegister extends StatefulWidget {
   const UserRegister({super.key});
@@ -11,17 +14,49 @@ class UserRegister extends StatefulWidget {
 
 class _UserRegisterState extends State<UserRegister> {
   final _formKey = GlobalKey<FormState>();
-  late String _username = "", _password = "";
+  Future<List<Institution>> fetchInstitutions() async {
+    final response =
+        await http.get(Uri.parse('https://yourapi.com/institutions'));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return List<Institution>.from(
+          json.map((i) => Institution(id: i['id'], name: i['name'])));
+    } else {
+      throw Exception('Failed to fetch institutions');
+    }
+  }
+
+  late Future<List<Institution>> _institutionsFuture;
+  Institution? _selectedInstitution;
+
+  late String _username = "",
+      _password = "",
+      first_name = "",
+      last_name = "",
+      email = "",
+      student_number = "";
   String _errorMessage = "";
   final List<String> titles = <String>['Mr', 'Mrs', 'Miss', 'Dr', 'Prof'];
   final List<String> genders = <String>['Male', 'Female', 'Others'];
   late String title = titles.first;
   late String gender = genders.first;
+  bool _obscureText = true;
+
   submit() {
     setState(() {
       _errorMessage = "";
     });
-    var data = {"email": _username, "password": _password};
+    var data = {
+      "first_name": first_name,
+      "last_name": last_name,
+      "other_names": title,
+      "email": email,
+      "password": _password,
+      "gender": gender,
+      "user_type": "STUDENT",
+      "student_number": student_number,
+      "institution_id": _selectedInstitution
+    };
     login(
         data,
         (result, error) => {
@@ -43,6 +78,13 @@ class _UserRegisterState extends State<UserRegister> {
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
+    _institutionsFuture = fetchInstitutions();
+  }
+
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
   }
 
   @override
@@ -66,41 +108,6 @@ class _UserRegisterState extends State<UserRegister> {
                   ),
                 )
               : Container(height: 1),
-          Container(
-              padding: EdgeInsets.all(15),
-              height: MediaQuery.of(context).size.width / 3,
-              child: Center(
-                  child: TextField(
-                controller: dateInput,
-                //editing controller of this TextField
-                decoration: InputDecoration(
-                    icon: Icon(Icons.calendar_today), //icon of text field
-                    labelText: "Enter Date" //label text of field
-                    ),
-                readOnly: true,
-                //set it true, so that user will not able to edit text
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1950),
-                      //DateTime.now() - not to allow to choose before today.
-                      lastDate: DateTime(2100));
-
-                  if (pickedDate != null) {
-                    print(
-                        pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                    String formattedDate =
-                        DateFormat('yyyy-MM-dd').format(pickedDate);
-                    print(
-                        formattedDate); //formatted date output using intl package =>  2021-03-16
-                    setState(() {
-                      dateInput.text =
-                          formattedDate; //set output date to TextField value.
-                    });
-                  } else {}
-                },
-              ))),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
@@ -129,18 +136,18 @@ class _UserRegisterState extends State<UserRegister> {
           ),
           TextFormField(
             decoration: InputDecoration(
-                labelText: 'FirstName',
+                labelText: 'First Name',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
                   gapPadding: 5.0,
                 )),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a username';
+                return 'Please enter first name';
               }
               return null;
             },
-            onSaved: (value) => _username = value!,
+            onSaved: (value) => first_name = value!,
           ),
           const SizedBox(
             height: 10.0,
@@ -154,11 +161,11 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a username';
+                return 'Please enter last name';
               }
               return null;
             },
-            onSaved: (value) => _username = value!,
+            onSaved: (value) => last_name = value!,
           ),
           const SizedBox(
             height: 10.0,
@@ -172,29 +179,11 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a username';
+                return 'Please enter email';
               }
               return null;
             },
-            onSaved: (value) => _username = value!,
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: 'Phone Number',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a username';
-              }
-              return null;
-            },
-            onSaved: (value) => _username = value!,
+            onSaved: (value) => email = value!,
           ),
           const SizedBox(
             height: 10.0,
@@ -225,20 +214,47 @@ class _UserRegisterState extends State<UserRegister> {
           const SizedBox(
             height: 10.0,
           ),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: 'Date of birth',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a username';
-              }
-              return null;
-            },
-            onSaved: (value) => _username = value!,
+          Container(
+              // padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              // height: MediaQuery.of(context).size.width / 3,
+              child: Center(
+                  child: TextField(
+                controller: dateInput,
+                //editing controller of this TextField
+                decoration: InputDecoration(
+                    icon: Icon(Icons.calendar_today), //icon of text field
+                    labelText: "Date of birth" //label text of field
+                    ),
+                readOnly: true,
+                //set it true, so that user will not able to edit text
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1950),
+                      //DateTime.now() - not to allow to choose before today.
+                      lastDate: DateTime(2100));
+
+                  if (pickedDate != null) {
+                    print(
+                        pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                    print(
+                        formattedDate); //formatted date output using intl package =>  2021-03-16
+                    setState(() {
+                      dateInput.text =
+                          formattedDate; //set output date to TextField value.
+                    });
+                  } else {}
+                },
+              ))),
+          const SizedBox(
+            height: 10.0,
           ),
           const SizedBox(
             height: 10.0,
@@ -252,7 +268,7 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a username';
+                return 'Please select institution';
               }
               return null;
             },
@@ -270,29 +286,31 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a username';
+                return 'Please enter registration number';
               }
               return null;
             },
-            onSaved: (value) => _username = value!,
+            onSaved: (value) => student_number = value!,
           ),
           const SizedBox(
             height: 10.0,
           ),
           TextFormField(
+            obscureText: true,
             decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
+              labelText: 'Password',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                gapPadding: 5.0,
+              ),
+            ),
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a username';
+                return 'Please enter a password';
               }
               return null;
             },
-            onSaved: (value) => _username = value!,
+            onSaved: (value) => _password = value!,
           ),
           const SizedBox(
             height: 10.0,
@@ -307,7 +325,10 @@ class _UserRegisterState extends State<UserRegister> {
             obscureText: true,
             validator: (value) {
               if (value!.isEmpty) {
-                return 'Please enter a password';
+                return 'Please enter confirm password';
+              }
+              if (_password != value) {
+                return 'password does not match';
               }
               return null;
             },
