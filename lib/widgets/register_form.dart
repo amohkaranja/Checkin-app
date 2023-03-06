@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import '../utils/apis_list.dart';
 import 'package:intl/intl.dart';
@@ -14,14 +16,67 @@ class UserRegister extends StatefulWidget {
 
 class _UserRegisterState extends State<UserRegister> {
   final _formKey = GlobalKey<FormState>();
-  List<Institution> _institutions = [];
-  Institution? _selectedInstitution;
+  final TextEditingController _emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  List<Map<String, String>> _institutions = []; // list of institutions
+  late String? _selectedId = _institutions[0]["id"]; // selected institution ID
+  // fetch institutions from URL
+  Future<void> fetchInstitutions() async {
+    List<Map<String, String>> institutions = [];
+    try {
+      String url =
+          'https://admin.check-in.co.ke:6700/api/v1/institution/institutions/'; // replace with your URL
+
+      var response = await http.get(Uri.parse(url));
+      var data = json.decode(response.body);
+
+      setState(() {
+        for (var item in data["items"]) {
+          Map<String, String> institution = {
+            "id": item["id"],
+            "institution_name": item["institution_name"]
+          };
+          institutions.add(institution);
+        }
+        _institutions = institutions;
+      });
+    } catch (e) {
+      print(e);
+    }
+    ;
+  }
+
+  bool _isEmailValid = true;
+  bool _validateEmail(String email) {
+    String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    RegExp regExp = RegExp(emailPattern);
+    return regExp.hasMatch(email);
+  }
+
+  bool validatePhone(String phone) {
+    // Regular expression pattern to match a 9-digit phone number that doesn't start with 0
+    RegExp pattern = RegExp(r'^[1-9]\d{8}$');
+    return pattern.hasMatch(phone);
+  }
+
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  bool validatePassword() {
+    if (_password == _confirmPassword) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   late String _username = "",
       _password = "",
       first_name = "",
       last_name = "",
       email = "",
+      _phoneNumber = "",
+      middle_name = "",
+      _confirmPassword = "",
       student_number = "";
   String _errorMessage = "";
   final List<String> titles = <String>['Mr', 'Mrs', 'Miss', 'Dr', 'Prof'];
@@ -37,46 +92,52 @@ class _UserRegisterState extends State<UserRegister> {
     var data = {
       "first_name": first_name,
       "last_name": last_name,
-      "other_names": title,
+      "other_names": middle_name,
+      "title": title,
       "email": email,
       "password": _password,
       "gender": gender,
+      "phone_number": "+254$_phoneNumber",
       "user_type": "STUDENT",
       "student_number": student_number,
-      "institution_id": _selectedInstitution
+      "institution_id": _selectedId,
+      "date_of_birth": dateInput.text
     };
-    login(
-        data,
-        (result, error) => {
-              if (result == null)
-                {
-                  print(error),
-                  setState(() {
-                    _errorMessage = error;
-                  })
-                }
-              else
-                {
-                  print(result),
-                }
-            });
+    print(data);
+    // login(
+    //     data,
+    //     (result, error) => {
+    //           if (result == null)
+    //             {
+    //               print(error),
+    //               setState(() {
+    //                 _errorMessage = error;
+    //               })
+    //             }
+    //           else
+    //             {
+    //               print(result),
+    //             }
+    //         });
   }
 
   TextEditingController dateInput = TextEditingController();
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
-    fetchInstitutions().then((institutions) {
-      setState(() {
-        _institutions = institutions;
-      });
-    });
+    fetchInstitutions();
   }
 
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
   @override
@@ -126,35 +187,6 @@ class _UserRegisterState extends State<UserRegister> {
           const SizedBox(
             height: 10.0,
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 3),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: _institutions.isNotEmpty
-                ? DropdownButton<Institution>(
-                    isExpanded: true,
-                    // Set the selected value
-                    value: _institutions[0],
-                    onChanged: (Institution? newValue) {
-                      setState(() {
-                        _institutions[0] = newValue!;
-                      });
-                    },
-                    items: _institutions.map<DropdownMenuItem<Institution>>(
-                        (Institution value) {
-                      return DropdownMenuItem<Institution>(
-                        value: value,
-                        child: Text(value.name),
-                      );
-                    }).toList(),
-                  )
-                : CircularProgressIndicator(),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
           TextFormField(
             decoration: InputDecoration(
                 labelText: 'First Name',
@@ -193,11 +225,37 @@ class _UserRegisterState extends State<UserRegister> {
           ),
           TextFormField(
             decoration: InputDecoration(
-                labelText: 'Email',
+                labelText: 'Middle Name',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
                   gapPadding: 5.0,
                 )),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter middle name';
+              }
+              return null;
+            },
+            onSaved: (value) => middle_name = value!,
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+                labelText: 'Email',
+                errorText:
+                    _isEmailValid ? null : 'Please enter a valid email address',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  gapPadding: 5.0,
+                )),
+            controller: _emailController,
+            onChanged: (text) {
+              setState(() {
+                _isEmailValid = _validateEmail(text);
+              });
+            },
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Please enter email';
@@ -205,6 +263,31 @@ class _UserRegisterState extends State<UserRegister> {
               return null;
             },
             onSaved: (value) => email = value!,
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+                labelText: 'Phone Number',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  gapPadding: 5.0,
+                )),
+            keyboardType: TextInputType.phone,
+            onChanged: (value) {
+              // Validate the phone number as the user types
+              if (!validatePhone(value)) {
+                phoneController.clear();
+              }
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter phone number';
+              }
+              return null;
+            },
+            onSaved: (value) => _phoneNumber = value!,
           ),
           const SizedBox(
             height: 10.0,
@@ -277,23 +360,30 @@ class _UserRegisterState extends State<UserRegister> {
           const SizedBox(
             height: 10.0,
           ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: 'Institution',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please select institution';
-              }
-              return null;
-            },
-            onSaved: (value) => _username = value!,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 3),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: _institutions.isNotEmpty
+                ? DropdownButton(
+                    isExpanded: true,
+                    value: _selectedId,
+                    hint: Text('Select an institution'),
+                    items: _institutions.map((institution) {
+                      return DropdownMenuItem(
+                        value: institution["id"],
+                        child: Text(institution["institution_name"]!),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedId = value.toString();
+                      });
+                    },
+                  )
+                : Loading(),
           ),
           const SizedBox(
             height: 10.0,
@@ -318,6 +408,7 @@ class _UserRegisterState extends State<UserRegister> {
           ),
           TextFormField(
             obscureText: true,
+            controller: passwordController,
             decoration: InputDecoration(
               labelText: 'Password',
               border: OutlineInputBorder(
@@ -337,6 +428,7 @@ class _UserRegisterState extends State<UserRegister> {
             height: 10.0,
           ),
           TextFormField(
+            controller: confirmPasswordController,
             decoration: InputDecoration(
                 labelText: 'confirm password',
                 border: OutlineInputBorder(
@@ -348,12 +440,16 @@ class _UserRegisterState extends State<UserRegister> {
               if (value!.isEmpty) {
                 return 'Please enter confirm password';
               }
-              if (_password != value) {
-                return 'password does not match';
-              }
+
               return null;
             },
-            onSaved: (value) => _password = value!,
+            onEditingComplete: () {
+              _confirmPassword = confirmPasswordController.text;
+              if (!validatePassword()) {
+                // Show an error message or perform some other action
+              }
+            },
+            onSaved: (value) => _confirmPassword = value!,
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -374,14 +470,18 @@ class _UserRegisterState extends State<UserRegister> {
   }
 }
 
-Future<List<Institution>> fetchInstitutions() async {
-  final response = await http.get(Uri.parse(
-      'https://admin.check-in.co.ke:6700/api/v1/institution/institutions/'));
-  if (response.statusCode == 200) {
-    final json = jsonDecode(response.body);
-    return List<Institution>.from(
-        json.map((i) => Institution(id: i['id'], name: i['name'])));
-  } else {
-    throw Exception('Failed to fetch institutions');
+class Loading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          color: Color.fromARGB(255, 11, 239, 129).withOpacity(0.5),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ],
+    );
   }
 }
