@@ -14,19 +14,7 @@ class UserRegister extends StatefulWidget {
 
 class _UserRegisterState extends State<UserRegister> {
   final _formKey = GlobalKey<FormState>();
-  Future<List<Institution>> fetchInstitutions() async {
-    final response =
-        await http.get(Uri.parse('https://yourapi.com/institutions'));
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      return List<Institution>.from(
-          json.map((i) => Institution(id: i['id'], name: i['name'])));
-    } else {
-      throw Exception('Failed to fetch institutions');
-    }
-  }
-
-  late Future<List<Institution>> _institutionsFuture;
+  List<Institution> _institutions = [];
   Institution? _selectedInstitution;
 
   late String _username = "",
@@ -78,7 +66,11 @@ class _UserRegisterState extends State<UserRegister> {
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
-    _institutionsFuture = fetchInstitutions();
+    fetchInstitutions().then((institutions) {
+      setState(() {
+        _institutions = institutions;
+      });
+    });
   }
 
   void _toggle() {
@@ -130,6 +122,35 @@ class _UserRegisterState extends State<UserRegister> {
                 );
               }).toList(),
             ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 3),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: _institutions.isNotEmpty
+                ? DropdownButton<Institution>(
+                    isExpanded: true,
+                    // Set the selected value
+                    value: _institutions[0],
+                    onChanged: (Institution? newValue) {
+                      setState(() {
+                        _institutions[0] = newValue!;
+                      });
+                    },
+                    items: _institutions.map<DropdownMenuItem<Institution>>(
+                        (Institution value) {
+                      return DropdownMenuItem<Institution>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  )
+                : CircularProgressIndicator(),
           ),
           const SizedBox(
             height: 10.0,
@@ -350,5 +371,17 @@ class _UserRegisterState extends State<UserRegister> {
         ],
       ),
     );
+  }
+}
+
+Future<List<Institution>> fetchInstitutions() async {
+  final response = await http.get(Uri.parse(
+      'https://admin.check-in.co.ke:6700/api/v1/institution/institutions/'));
+  if (response.statusCode == 200) {
+    final json = jsonDecode(response.body);
+    return List<Institution>.from(
+        json.map((i) => Institution(id: i['id'], name: i['name'])));
+  } else {
+    throw Exception('Failed to fetch institutions');
   }
 }
