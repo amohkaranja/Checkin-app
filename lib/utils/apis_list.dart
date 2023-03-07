@@ -11,7 +11,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://8b2a-105-163-157-203.eu.ngrok.io/";
+const api = "https://admin.check-in.co.ke:6700/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data
@@ -31,6 +31,23 @@ void login(data, callback) async {
   if (response.statusCode == 200) {
     // print(jsonResponse["access"]);
     // await storage.write(key: "access_token", value: jsonResponse["access"]);
+    // ignore: void_checks
+    return callback(jsonResponse["message"], null);
+  }
+  callback(null, jsonResponse["message"]);
+}
+
+void post(dynamic data, String url, Function callback) async {
+  var apiUrl = Uri.parse(api + url);
+  var response = await http.post(apiUrl,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data));
+
+  var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+  print(response.statusCode);
+  if (response.statusCode == 200) {
     // ignore: void_checks
     return callback(jsonResponse["message"], null);
   }
