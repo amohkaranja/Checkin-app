@@ -16,10 +16,45 @@ class UserRegister extends StatefulWidget {
 
 class _UserRegisterState extends State<UserRegister> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   List<Map<String, String>> _institutions = []; // list of institutions
   late String? _selectedId = _institutions[0]["id"]; // selected institution ID
+  isPasswordValid(String password) {
+    // Check if password is at least 8 characters long
+    if (password.length < 8) {
+      return "password must be at least 8 characters long";
+    }
+
+    // Check if password contains at least one special character
+    RegExp specialCharRegex = RegExp(r'[!@#\$&\*~-]');
+    if (!specialCharRegex.hasMatch(password)) {
+      return "password must contains at least one special character";
+    }
+
+    // Check if password contains at least two digits
+    RegExp digitRegex = RegExp(r'\d.*\d');
+    if (!digitRegex.hasMatch(password)) {
+      return "password must contains at least two digits";
+    }
+
+    // Check if password contains at least one uppercase letter
+    RegExp upperCaseRegex = RegExp(r'[A-Z]');
+    if (!upperCaseRegex.hasMatch(password)) {
+      return "password must contains at least one uppercase letter";
+    }
+
+    // Check if password contains at least one lowercase letter
+    RegExp lowerCaseRegex = RegExp(r'[a-z]');
+    if (!lowerCaseRegex.hasMatch(password)) {
+      return "password must contains at least one lowercase letter";
+    }
+
+    // If all conditions are met, return true
+    // return null;
+  }
+
   // fetch institutions from URL
   Future<void> fetchInstitutions() async {
     List<Map<String, String>> institutions = [];
@@ -47,6 +82,12 @@ class _UserRegisterState extends State<UserRegister> {
   }
 
   bool _isEmailValid = true;
+  bool _isFirstName = false;
+  bool _isLastName = false;
+  bool _isOtherNames = false;
+  bool _isPhoneNumber = false;
+  bool _isRegNo = false;
+  bool _isPassword = false;
   bool _validateEmail(String email) {
     String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
     RegExp regExp = RegExp(emailPattern);
@@ -80,7 +121,7 @@ class _UserRegisterState extends State<UserRegister> {
       student_number = "";
   String _errorMessage = "";
   final List<String> titles = <String>['Mr', 'Mrs', 'Miss', 'Dr', 'Prof'];
-  final List<String> genders = <String>['Male', 'Female', 'Others'];
+  final List<String> genders = <String>['MALE', 'FEMALE', 'OTHERS'];
   late String title = titles.first;
   late String gender = genders.first;
   bool _obscureText = true;
@@ -101,24 +142,31 @@ class _UserRegisterState extends State<UserRegister> {
       "user_type": "STUDENT",
       "student_number": student_number,
       "institution_id": _selectedId,
-      "date_of_birth": dateInput.text
+      "date_of_birth": DateTime.parse(dateInput.text).toUtc().toIso8601String()
     };
-    print(data);
-    // login(
-    //     data,
-    //     (result, error) => {
-    //           if (result == null)
-    //             {
-    //               print(error),
-    //               setState(() {
-    //                 _errorMessage = error;
-    //               })
-    //             }
-    //           else
-    //             {
-    //               print(result),
-    //             }
-    //         });
+    if (_isFirstName &&
+        _isLastName &&
+        _isOtherNames &&
+        _isPhoneNumber &&
+        _isRegNo &&
+        _isPassword) {
+      print(data);
+      post(
+          data,
+          "api/auth/users/",
+          (result, error) => {
+                if (result == null)
+                  {
+                    print("wueeh, kuna errors huku${error}"),
+                    setState(() {
+                      _errorMessage = error;
+                    })
+                  }
+                else
+                  print("It's a good day, no errors"),
+                {print(result)}
+              });
+    }
   }
 
   TextEditingController dateInput = TextEditingController();
@@ -153,8 +201,8 @@ class _UserRegisterState extends State<UserRegister> {
                   decoration: const BoxDecoration(),
                   padding: const EdgeInsets.all(2),
                   child: Text(
-                    "$_errorMessage",
-                    style: TextStyle(
+                    _errorMessage,
+                    style: const TextStyle(
                         color: Colors.red,
                         fontSize: 16,
                         fontWeight: FontWeight.w500),
@@ -162,7 +210,7 @@ class _UserRegisterState extends State<UserRegister> {
                 )
               : Container(height: 1),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5.0),
@@ -196,7 +244,15 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
+                setState(() {
+                  _isFirstName = false;
+                });
+
                 return 'Please enter first name';
+              } else {
+                setState(() {
+                  _isFirstName = true;
+                });
               }
               return null;
             },
@@ -214,7 +270,14 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
+                setState(() {
+                  _isLastName = false;
+                });
                 return 'Please enter last name';
+              } else {
+                setState(() {
+                  _isLastName = true;
+                });
               }
               return null;
             },
@@ -232,7 +295,14 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
+                setState(() {
+                  _isOtherNames = false;
+                });
                 return 'Please enter middle name';
+              } else {
+                setState(() {
+                  _isOtherNames = true;
+                });
               }
               return null;
             },
@@ -283,7 +353,14 @@ class _UserRegisterState extends State<UserRegister> {
             },
             validator: (value) {
               if (value!.isEmpty) {
+                setState(() {
+                  _isPhoneNumber = false;
+                });
                 return 'Please enter phone number';
+              } else {
+                setState(() {
+                  _isPhoneNumber = true;
+                });
               }
               return null;
             },
@@ -293,7 +370,7 @@ class _UserRegisterState extends State<UserRegister> {
             height: 10.0,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5.0),
@@ -329,7 +406,7 @@ class _UserRegisterState extends State<UserRegister> {
                   child: TextField(
                 controller: dateInput,
                 //editing controller of this TextField
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     icon: Icon(Icons.calendar_today), //icon of text field
                     labelText: "Date of birth" //label text of field
                     ),
@@ -361,7 +438,7 @@ class _UserRegisterState extends State<UserRegister> {
             height: 10.0,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5.0),
@@ -370,7 +447,7 @@ class _UserRegisterState extends State<UserRegister> {
                 ? DropdownButton(
                     isExpanded: true,
                     value: _selectedId,
-                    hint: Text('Select an institution'),
+                    hint: const Text('Select an institution'),
                     items: _institutions.map((institution) {
                       return DropdownMenuItem(
                         value: institution["id"],
@@ -397,11 +474,23 @@ class _UserRegisterState extends State<UserRegister> {
                 )),
             validator: (value) {
               if (value!.isEmpty) {
+                setState(() {
+                  _isRegNo = false;
+                });
                 return 'Please enter registration number';
+              } else {
+                setState(() {
+                  _isRegNo = true;
+                });
               }
               return null;
             },
             onSaved: (value) => student_number = value!,
+            onChanged: (value) {
+              setState(() {
+                student_number = value;
+              });
+            },
           ),
           const SizedBox(
             height: 10.0,
@@ -418,11 +507,23 @@ class _UserRegisterState extends State<UserRegister> {
             ),
             validator: (value) {
               if (value!.isEmpty) {
+                setState(() {
+                  _isPassword = false;
+                });
                 return 'Please enter a password';
+              } else {
+                setState(() {
+                  _isPassword = true;
+                });
+                return isPasswordValid(value);
               }
-              return null;
             },
             onSaved: (value) => _password = value!,
+            onChanged: (value) {
+              setState(() {
+                _password = value;
+              });
+            },
           ),
           const SizedBox(
             height: 10.0,
@@ -439,6 +540,10 @@ class _UserRegisterState extends State<UserRegister> {
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Please enter confirm password';
+              } else {
+                if (value != _password) {
+                  return 'password does not match';
+                }
               }
 
               return null;
@@ -476,8 +581,8 @@ class Loading extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          color: Color.fromARGB(255, 11, 239, 129).withOpacity(0.5),
-          child: Center(
+          color: const Color.fromARGB(255, 11, 239, 129).withOpacity(0.5),
+          child: const Center(
             child: CircularProgressIndicator(),
           ),
         ),
