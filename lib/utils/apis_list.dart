@@ -11,7 +11,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://admin.check-in.co.ke:6700/";
+const api = "https://2e97-105-163-2-162.eu.ngrok.io/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data
@@ -46,10 +46,10 @@ void post(dynamic data, String url, Function callback) async {
       body: jsonEncode(data));
 
   var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
-  print(response.statusCode);
-  if (response.statusCode == 200) {
+  print(jsonResponse);
+  if (response.statusCode == 201) {
     // ignore: void_checks
-    return callback(jsonResponse["message"], null);
+    return callback("success", null);
   }
   callback(null, jsonResponse["message"]);
 }

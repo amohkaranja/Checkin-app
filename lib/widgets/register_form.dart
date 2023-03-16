@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../utils/apis_list.dart';
+import '../screens/login_screen.dart';
 import 'package:intl/intl.dart';
 import '../models/user_model.dart';
 import 'dart:convert';
@@ -164,7 +165,10 @@ class _UserRegisterState extends State<UserRegister> {
                   }
                 else
                   print("It's a good day, no errors"),
-                {print(result)}
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                )
               });
     }
   }
