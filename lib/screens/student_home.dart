@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'user_profile.dart';
 class StudentHomeScreen extends StatelessWidget {
   const StudentHomeScreen({super.key});
 
@@ -170,10 +170,19 @@ class StudentHomeScreen extends StatelessWidget {
                   ],
                 ),
                 Column(
-                  children: const [
-                    Image(
-                      image: AssetImage("assets/images/account.png"),
-                      height: 40,
+                  children:  [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => User_Profile()),
+                  );
+                      },
+                      child: Image(
+                        image: AssetImage("assets/images/account.png"),
+                        height: 40,
+                      ),
                     ),
                     Text("Profile")
                   ],
