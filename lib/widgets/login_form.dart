@@ -127,7 +127,7 @@ class _LoginFormState extends State<LoginForm> {
                           MaterialPageRoute(builder: (context) => UserSignUp()),
                         )
                       },
-                      child: Text(
+                      child: const Text(
                         "click here to register",
                         style: TextStyle(color: Colors.blue),
                       ),

@@ -11,7 +11,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://2e97-105-163-2-162.eu.ngrok.io/";
+const api = "https://27e0-105-163-2-162.in.ngrok.io/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data
