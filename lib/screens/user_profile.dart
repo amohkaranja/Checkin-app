@@ -1,3 +1,5 @@
+import 'package:checkin/screens/security.dart';
+import 'package:checkin/screens/student_home.dart';
 import 'package:flutter/material.dart';
 
 class User_Profile extends StatefulWidget {
@@ -89,7 +91,10 @@ class _User_ProfileState extends State<User_Profile> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0,),
-                        child: Column(children: const [
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
                           Text("Account",style: TextStyle(fontWeight: FontWeight.w600),),
                           Text("Edit personal information",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic))
                         ],),
@@ -99,21 +104,32 @@ class _User_ProfileState extends State<User_Profile> {
           ),
            Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10.0),
-            child: Row(
-              children: [
-                const Image(
-                        image: AssetImage("assets/images/key.png"),
-                        height: 40,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0,),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
-                          Text("Security",style: TextStyle(fontWeight: FontWeight.w600),),
-                          Text("Change password",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic))
-                        ],),
-                      )
-              ],
+            child: GestureDetector(
+                 onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangePassword()),
+                    );
+                        },
+              child: Row(
+                children: [
+                  const Image(
+                          image: AssetImage("assets/images/key.png"),
+                          height: 40,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0,),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                            Text("Security",style: TextStyle(fontWeight: FontWeight.w600),),
+                            Text("Change password",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic))
+                          ],),
+                        )
+                ],
+              ),
             ),
           ), Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10.0),
@@ -126,16 +142,26 @@ class _User_ProfileState extends State<User_Profile> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0,),
                         child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                           
-                          Text("Acknowledment",style: TextStyle(fontWeight: FontWeight.w600),),
+                          Text("Acknowledgement",style: TextStyle(fontWeight: FontWeight.w600),),
                           Text("Public testers and appreciation list",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic))
                         ],),
                       )
               ],
             ),
-          ),
+          ),  Card(child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(children: const <Widget>[
+                  Expanded(child: Center(child: Text("Check-In V 1.0"))),
+                  Image(image: AssetImage("assets/images/exit.png"),
+                              height: 40,
+                            )],),
+          )),
+          
+          
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0,),
             child: Center(
@@ -143,10 +169,19 @@ class _User_ProfileState extends State<User_Profile> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
-                    children: const <Widget>[
-                      Image(
-                        image: AssetImage("assets/images/home.png"),
-                        height: 40,
+                    children: <Widget>[
+                      GestureDetector(
+                          onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StudentHomeScreen()),
+                    );
+                        },
+                        child: Image(
+                          image: AssetImage("assets/images/home.png"),
+                          height: 40,
+                        ),
                       ),
                       Text("Home")
                     ],
@@ -161,12 +196,12 @@ class _User_ProfileState extends State<User_Profile> {
                           builder: (context) => User_Profile()),
                     );
                         },
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("assets/images/account.png"),
                           height: 40,
                         ),
                       ),
-                      Text("Profile")
+                      const Text("Profile")
                     ],
                   )
                 ],
