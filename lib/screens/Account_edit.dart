@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-import 'user_profile.dart';
-import 'student_home.dart';
 
-class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key});
+class Account_Edit extends StatefulWidget {
+  const Account_Edit({super.key});
 
   @override
-  State<ChangePassword> createState() => _ChangePasswordState();
+  State<Account_Edit> createState() => _Account_EditState();
 }
 
-class _ChangePasswordState extends State<ChangePassword> {
+class _Account_EditState extends State<Account_Edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+       appBar: AppBar(
         title: const Text(
-          "Security",
+          "Account Edit",
           style: TextStyle(
               fontStyle: FontStyle.italic, fontWeight: FontWeight.w600,color:  Color(0xff008346)),
         ),
         backgroundColor: Colors.white,
       ),
-       body: Stack(
-          children:<Widget>[ Column(children:<Widget> [
+      body: Column(children:<Widget> [
                     Container(
                 
                 width: double.infinity,
@@ -53,7 +50,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   child: TextFormField(
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Confirm Password',
+                      labelText: 'First name',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         gapPadding: 5.0,
@@ -72,7 +69,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     child: TextFormField(
                                 obscureText: true,
                                 decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'Last name',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                         gapPadding: 5.0,
@@ -91,7 +88,31 @@ class _ChangePasswordState extends State<ChangePassword> {
                 child: Card(
                   child: TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'confirm password',
+                        labelText: 'Email address',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          gapPadding: 10.0,
+                        )),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter confirm password';
+                      } 
+                      
+                      return null;
+                    },
+                    onEditingComplete: () {
+                      
+                    },
+                  ),
+                ),
+              ),
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        labelText: 'Phone no.(254)',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                           gapPadding: 10.0,
@@ -117,66 +138,11 @@ class _ChangePasswordState extends State<ChangePassword> {
               onPressed: () {
               },
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: const Text('Change Password'),
+                padding: const EdgeInsets.all(10.0),
+                child: const Text('Update'),
               ),
             ),  
               ]),
-           
-            //  Positioned(
-            //   left: 0,
-            // bottom: 0,
-            // right: 0,
-            //    child: Padding(
-            //     padding: const EdgeInsets.symmetric(vertical: 10.0,),
-            //     child: Center(
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //         children: [
-            //           Column(
-            //             children:  <Widget>[
-                          
-            //               GestureDetector(
-            //                 onTap: () {
-            //                   Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) => StudentHomeScreen()),
-            //             );
-            //                 },
-            //                 child: Image(
-            //                   image: AssetImage("assets/images/home.png"),
-            //                   height: 40,
-            //                 ),
-            //               ),
-            //               Text("Home")
-            //             ],
-            //           ),
-            //           Column(
-            //             children:  [
-            //               GestureDetector(
-            //                 onTap: () {
-            //                   Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) => User_Profile()),
-            //             );
-            //                 },
-            //                 child: const Image(
-            //                   image: AssetImage("assets/images/account.png"),
-            //                   height: 40,
-            //                 ),
-            //               ),
-            //               const Text("Profile")
-            //             ],
-            //           )
-            //         ],
-            //       ),
-            //     ),
-            //              ),
-            //  ),
-       ])
-       
     );
   }
 }
