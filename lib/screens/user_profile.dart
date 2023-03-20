@@ -1,3 +1,5 @@
+import 'package:checkin/screens/Account_edit.dart';
+import 'package:checkin/screens/classes.dart';
 import 'package:checkin/screens/security.dart';
 import 'package:checkin/screens/student_home.dart';
 import 'package:flutter/material.dart';
@@ -64,12 +66,21 @@ class _User_ProfileState extends State<User_Profile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-            children: const [
-              Text("Classes Registered",style: TextStyle(color: Color(0xff008346)),),
-              Text("2")
-            ],
-          ),Column(
+                    GestureDetector(
+                      onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyClasses()),
+                    );
+                        },
+                      child: Column(
+                                children: const [
+                                  Text("Classes Registered",style: TextStyle(color: Color(0xff008346)),),
+                                  Text("2")
+                                ],
+                              ),
+                    ),Column(
             children: const [
               Text("Classes signed",style: TextStyle(color: Color(0xff008346))),
               Text("2")
@@ -91,13 +102,22 @@ class _User_ProfileState extends State<User_Profile> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0,),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                          Text("Account",style: TextStyle(fontWeight: FontWeight.w600),),
-                          Text("Edit personal information",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic))
-                        ],),
+                        child: GestureDetector(
+                           onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Account_Edit()),
+                    );
+                        },
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                            Text("Account",style: TextStyle(fontWeight: FontWeight.w600),),
+                            Text("Edit personal information",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic))
+                          ],),
+                        ),
                       )
               ],
             ),
