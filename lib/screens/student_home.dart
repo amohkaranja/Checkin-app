@@ -1,3 +1,4 @@
+import 'package:checkin/screens/Scanned_classes.dart';
 import 'package:checkin/screens/classes.dart';
 import 'package:flutter/material.dart';
 import 'user_profile.dart';
@@ -54,20 +55,29 @@ class StudentHomeScreen extends StatelessWidget {
               )
             ]),
             child: Center(
-              child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Center(
-                      child: Column(children: const <Widget>[
-                        Image(
-                          image: AssetImage("assets/images/qr_code_black.png"),
-                          height: 80,
-                          fit: BoxFit.contain,
-                        ),
-                        Text("Scanned Class")
-                      ]),
+              child: GestureDetector(
+                 onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ScannedClasses()),
+                    );
+                        },
+                child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Center(
+                        child: Column(children: const <Widget>[
+                          Image(
+                            image: AssetImage("assets/images/qr_code_black.png"),
+                            height: 80,
+                            fit: BoxFit.contain,
+                          ),
+                          Text("Scanned Class")
+                        ]),
+                      ),
                     ),
-                  ),
+                ),
               ),
             ),
             
@@ -119,18 +129,27 @@ class StudentHomeScreen extends StatelessWidget {
                                                blurRadius: 3,
                                              )
                                            ]),
-                                             child: Card(
-                                                   child: Padding(
-                                                     padding: const EdgeInsets.all(30.0),
-                                                     child: Column(children: const <Widget>[
-                                                                               Image(
-                                                                                 image: AssetImage("assets/images/time_machine.png"),
-                                                                                 height: 80,
-                                                                                 fit: BoxFit.contain,
-                                                                               ),
-                                                                               Text("Scanned Activities")
-                                                     ]),
-                                                   ),
+                                             child: GestureDetector(
+                                                onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ScannedClasses()),
+                    );
+                        },
+                                               child: Card(
+                                                     child: Padding(
+                                                       padding: const EdgeInsets.all(30.0),
+                                                       child: Column(children: const <Widget>[
+                                                                                 Image(
+                                                                                   image: AssetImage("assets/images/time_machine.png"),
+                                                                                   height: 80,
+                                                                                   fit: BoxFit.contain,
+                                                                                 ),
+                                                                                 Text("Scanned Activities")
+                                                       ]),
+                                                     ),
+                                               ),
                                              ),
                              ),
                            ),

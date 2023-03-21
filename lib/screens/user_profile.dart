@@ -1,4 +1,5 @@
 import 'package:checkin/screens/Account_edit.dart';
+import 'package:checkin/screens/Scanned_classes.dart';
 import 'package:checkin/screens/classes.dart';
 import 'package:checkin/screens/security.dart';
 import 'package:checkin/screens/student_home.dart';
@@ -15,13 +16,13 @@ class _User_ProfileState extends State<User_Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+    appBar: AppBar(
         title: const Text(
-          "My QR Code",
+          "My Profile",
           style: TextStyle(
-              fontStyle: FontStyle.italic, fontWeight: FontWeight.w600,color:  Color(0xff008346)),
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.w400),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff008346),
       ),
       body: SingleChildScrollView(
         child: Column(children:<Widget> [
@@ -80,12 +81,21 @@ class _User_ProfileState extends State<User_Profile> {
                                   Text("2")
                                 ],
                               ),
-                    ),Column(
-            children: const [
-              Text("Classes signed",style: TextStyle(color: Color(0xff008346))),
-              Text("2")
-            ],
-          )
+                    ),GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ScannedClasses()),
+                    );
+                        },
+                      child: Column(
+                                children: const [
+                                  Text("Classes signed",style: TextStyle(color: Color(0xff008346))),
+                                  Text("2")
+                                ],
+                              ),
+                    )
                   ],
                   )),
         ),

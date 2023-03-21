@@ -13,13 +13,13 @@ class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+    appBar: AppBar(
         title: const Text(
           "Security",
           style: TextStyle(
-              fontStyle: FontStyle.italic, fontWeight: FontWeight.w600,color:  Color(0xff008346)),
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.w400),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff008346),
       ),
        body: Stack(
           children:<Widget>[ Column(children:<Widget> [
