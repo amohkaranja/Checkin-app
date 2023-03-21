@@ -15,13 +15,13 @@ class _MyClassesState extends State<MyClasses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         title: const Text(
           "My Classes",
           style: TextStyle(
-              fontStyle: FontStyle.italic, fontWeight: FontWeight.w600,color:  Color(0xff008346)),
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.w400),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff008346),
       ),
       body: Stack(
         children:[ Column(
@@ -37,20 +37,29 @@ class _MyClassesState extends State<MyClasses> {
                               image: AssetImage("assets/images/chalk_board.png"),
                               height: 60,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0,),
-                              child: Expanded(
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                  Text("SCO402",style: TextStyle(fontWeight: FontWeight.w600),),
-                                  Text("LEGAL AND ETHICAL ISSUES IN COMPUTING",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
-                                  Text("Muthee Kiengei",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
-                                  Text("2021-12-09")
-                                ],),
-                              ),
-                            ),
+                           Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+  child: Flexible(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Text("SCO402", style: TextStyle(fontWeight: FontWeight.w600)),
+        Text(
+          "LEGAL AND ETHICAL ISSUES IN COMPUTING",
+          style: TextStyle(fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
+          softWrap: true,
+        ),
+        Text(
+          "Muthee Kiengei",
+          style: TextStyle(fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
+        ),
+        Text("2021-12-09"),
+      ],
+    ),
+  ),
+),
+
                          
                     ],
                   ),
@@ -68,20 +77,29 @@ class _MyClassesState extends State<MyClasses> {
                               image: AssetImage("assets/images/chalk_board.png"),
                               height: 60,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0,),
-                              child: Expanded(
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                  Text("SCO402",style: TextStyle(fontWeight: FontWeight.w600),),
-                                  Text("LEGAL AND ETHICAL ISSUES IN COMPUTING",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
-                                  Text("Muthee Kiengei",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
-                                  Text("2021-12-09")
-                                ],),
-                              ),
-                            ),
+                        Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("SCO402", style: TextStyle(fontWeight: FontWeight.w600)),
+                        Text(
+                          "LEGAL AND ETHICAL ISSUES IN COMPUTING",
+                          style: TextStyle(fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
+                          softWrap: true,
+                        ),
+                        Text(
+                          "Muthee Kiengei",
+                          style: TextStyle(fontWeight: FontWeight.w300, fontStyle: FontStyle.italic),
+                        ),
+                        Text("2021-12-09"),
+                      ],
+                    ),
+                  ),
+                ),
+
                          
                     ],
                   ),

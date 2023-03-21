@@ -11,13 +11,13 @@ class _Account_EditState extends State<Account_Edit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+   appBar: AppBar(
         title: const Text(
           "Account Edit",
           style: TextStyle(
-              fontStyle: FontStyle.italic, fontWeight: FontWeight.w600,color:  Color(0xff008346)),
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.w400),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff008346),
       ),
       body: Column(children:<Widget> [
                     Container(
