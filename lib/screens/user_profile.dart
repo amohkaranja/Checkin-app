@@ -1,8 +1,10 @@
 import 'package:checkin/screens/Account_edit.dart';
 import 'package:checkin/screens/Scanned_classes.dart';
 import 'package:checkin/screens/classes.dart';
+import 'package:checkin/screens/login_screen.dart';
 import 'package:checkin/screens/security.dart';
 import 'package:checkin/screens/student_home.dart';
+import 'package:checkin/utils/apis_list.dart';
 import 'package:flutter/material.dart';
 
 class User_Profile extends StatefulWidget {
@@ -13,6 +15,15 @@ class User_Profile extends StatefulWidget {
 }
 
 class _User_ProfileState extends State<User_Profile> {
+
+  Logout(){
+     Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen()),
+                  );
+    // logout();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

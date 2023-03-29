@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
+import 'screens/Index_page.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch()
             .copyWith(secondary: const Color(0xff00836F)),
       ),
-      home: const HomeScreen(),
+      home: IndexPage(),
     );
   }
 }
