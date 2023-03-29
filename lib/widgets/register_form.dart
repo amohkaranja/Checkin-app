@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../models/user_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({super.key});
@@ -17,11 +18,17 @@ class UserRegister extends StatefulWidget {
 
 class _UserRegisterState extends State<UserRegister> {
   final _formKey = GlobalKey<FormState>();
+@override
+void initState() {
+    dateInput.text = ""; //set the initial value of text field
+    super.initState();
+    fetchInstitutions();
+  }
 
   final TextEditingController _emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  List<Map<String, String>> _institutions = []; // list of institutions
-  late String? _selectedId = _institutions[0]["id"]; // selected institution ID
+   List<String> _institutions = []; // list of institutions
+  late String? _selectedId = _institutions[0].split(":")[1]; // selected institution ID
   isPasswordValid(String password) {
     // Check if password is at least 8 characters long
     if (password.length < 8) {
@@ -57,29 +64,14 @@ class _UserRegisterState extends State<UserRegister> {
   }
 
   // fetch institutions from URL
+
+   
   Future<void> fetchInstitutions() async {
-    List<Map<String, String>> institutions = [];
-    try {
-      String url =
-          'https://admin.check-in.co.ke:6700/api/v1/institution/institutions/'; // replace with your URL
 
-      var response = await http.get(Uri.parse(url));
-      var data = json.decode(response.body);
+      final prefs = await SharedPreferences.getInstance();
+     _institutions= (prefs.getStringList("schools")??[]);
 
-      setState(() {
-        for (var item in data["items"]) {
-          Map<String, String> institution = {
-            "id": item["id"],
-            "institution_name": item["institution_name"]
-          };
-          institutions.add(institution);
-        }
-        _institutions = institutions;
-      });
-    } catch (e) {
-      print(e);
-    }
-    ;
+   
   }
 
   bool _isEmailValid = true;
@@ -174,12 +166,7 @@ class _UserRegisterState extends State<UserRegister> {
   }
 
   TextEditingController dateInput = TextEditingController();
-  void initState() {
-    dateInput.text = ""; //set the initial value of text field
-    super.initState();
-    fetchInstitutions();
-  }
-
+  
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
@@ -452,10 +439,11 @@ class _UserRegisterState extends State<UserRegister> {
                     isExpanded: true,
                     value: _selectedId,
                     hint: const Text('Select an institution'),
-                    items: _institutions.map((institution) {
+                    items: _institutions.map((university) {
+                      final splitUniversity = university.split(":");
                       return DropdownMenuItem(
-                        value: institution["id"],
-                        child: Text(institution["institution_name"]!),
+                         value: splitUniversity[1],
+                         child: Text(splitUniversity[0]),
                       );
                     }).toList(),
                     onChanged: (value) {

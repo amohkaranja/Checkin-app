@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,7 +12,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://52ff-105-163-0-43.in.ngrok.io/";
+const api = "https://admin.check-in.co.ke:6700/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data
@@ -36,6 +37,36 @@ void login(data, callback) async {
   }
   callback(null, jsonResponse["message"]);
 }
+void logout() async{
+  print("hello");
+}
+Future<bool> fetchDataAndSaveToPrefs() async {
+  bool loading = true;
+  // obtain shared preferences
+  final prefs = await SharedPreferences.getInstance();
+  String url = '${api}api/v1/institution/institutions/'; 
+  var response = await http.get(Uri.parse(url));
+  var data = json.decode(response.body);
+  // Convert data to List<String>
+  List<String> schools = [];
+  if (data is List) {
+    schools = List.castFrom(data);
+  } else if (data is Map) {
+  if (data != null && data["items"] != null) {
+  data["items"].forEach((item) {
+    schools.add("${item['institution_name']}:${item['id']}");
+  });
+}
+
+  }
+ print(schools);
+  // set value
+  await prefs.setStringList("schools", schools);
+  loading = false;
+  
+  return loading;
+}
+
 
 void post(dynamic data, String url, Function callback) async {
   var apiUrl = Uri.parse(api + url);

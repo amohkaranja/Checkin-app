@@ -14,11 +14,13 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _loading=false;
   late String _username = "", _password = "";
   String _errorMessage = "";
   submit() {
     setState(() {
       _errorMessage = "";
+      _loading=true;
     });
     var data = {"email": _username, "password": _password};
     login(
@@ -26,6 +28,9 @@ class _LoginFormState extends State<LoginForm> {
         (result, error) => {
               if (result == null)
                 {
+                  setState(() {
+                  _loading=false;
+                }),
                   print(error),
                   setState(() {
                     _errorMessage = error;
@@ -33,7 +38,9 @@ class _LoginFormState extends State<LoginForm> {
                 }
               else
                 {
-                  print(result),
+                    setState(() {
+                  _loading=false;
+                }),
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -135,7 +142,23 @@ class _LoginFormState extends State<LoginForm> {
                   ],
                 ),
               ),
-            )
+            ),
+          _loading?  Center(
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: const [
+      CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xff008346)), 
+      ), 
+      SizedBox(height: 8),
+      Text(
+        'Loading...',
+        style: TextStyle(fontStyle: FontStyle.italic),
+      ),
+    ],
+  ),
+):Container()
+
           ],
         ),
       ),
