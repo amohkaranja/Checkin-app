@@ -45,12 +45,12 @@ class _IndexPageState extends State<IndexPage> {
               bottom: 15,
               right: 0,
                 child: Column(children:  <Widget>[
-                  Image(
+                  const Image(
                           image: AssetImage("assets/images/logo_jpg.png"),
                           height: 200,
                           width: 200,
                         ),
-             Text("v 2.0"),
+             const Text("v 2.0"),
              _loading?  Center(
               child: Column(mainAxisAlignment: MainAxisAlignment.center,
     children: const [

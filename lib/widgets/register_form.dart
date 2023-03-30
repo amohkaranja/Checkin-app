@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import '../utils/apis_list.dart';
 import '../screens/login_screen.dart';
 import 'package:intl/intl.dart';
-import '../models/user_model.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'from_inputs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRegister extends StatefulWidget {
@@ -167,6 +165,15 @@ void initState() {
 
   TextEditingController dateInput = TextEditingController();
   
+  String validateInput(String? value, bool stateVariable, void Function(bool) setStateVariable) {
+  if (value!.isEmpty) {
+    setStateVariable(false);
+    return 'Please enter a value';
+  } else {
+    setStateVariable(true);
+    return '';
+  }
+}
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
@@ -226,14 +233,7 @@ void initState() {
           const SizedBox(
             height: 10.0,
           ),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: 'First Name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
-            validator: (value) {
+          CustomTextField(labelText: 'First Name', validator: (value) {
               if (value!.isEmpty) {
                 setState(() {
                   _isFirstName = false;
@@ -245,21 +245,16 @@ void initState() {
                   _isFirstName = true;
                 });
               }
-              return null;
-            },
-            onSaved: (value) => first_name = value!,
-          ),
+              return '';
+            }, onSaved: (value) => first_name = value!),
+      
           const SizedBox(
             height: 10.0,
           ),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: 'Last Name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
-            validator: (value) {
+          CustomTextField(
+            labelText:"Last Name" ,
+            onSaved: (value) => last_name = value!,
+            validator:(value) {
               if (value!.isEmpty) {
                 setState(() {
                   _isLastName = false;
@@ -270,35 +265,25 @@ void initState() {
                   _isLastName = true;
                 });
               }
-              return null;
-            },
-            onSaved: (value) => last_name = value!,
+              return '';
+            }, 
+            
           ),
+    
           const SizedBox(
             height: 10.0,
           ),
-          TextFormField(
-            decoration: InputDecoration(
-                labelText: 'Middle Name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  gapPadding: 5.0,
-                )),
-            validator: (value) {
-              if (value!.isEmpty) {
-                setState(() {
-                  _isOtherNames = false;
-                });
-                return 'Please enter middle name';
-              } else {
-                setState(() {
-                  _isOtherNames = true;
-                });
-              }
-              return null;
-            },
-            onSaved: (value) => middle_name = value!,
-          ),
+         CustomTextField(
+          labelText: "Middle Name",
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter middle name';
+                    } else {
+                      return '';
+                    }
+                  },
+                  onSaved: (value) => middle_name = value!,
+                ),
           const SizedBox(
             height: 10.0,
           ),

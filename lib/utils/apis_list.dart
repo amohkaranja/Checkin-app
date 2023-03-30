@@ -27,11 +27,10 @@ void login(data, callback) async {
 
   // print(response);
   var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
-  // const storage = FlutterSecureStorage();
   // ignore: avoid_print
   if (response.statusCode == 200) {
-    // print(jsonResponse["access"]);
-    // await storage.write(key: "access_token", value: jsonResponse["access"]);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("token",jsonResponse["access"]);
     // ignore: void_checks
     return callback(jsonResponse["message"], null);
   }
@@ -59,7 +58,6 @@ Future<bool> fetchDataAndSaveToPrefs() async {
 }
 
   }
- print(schools);
   // set value
   await prefs.setStringList("schools", schools);
   loading = false;
