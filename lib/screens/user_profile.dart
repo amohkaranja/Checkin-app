@@ -7,6 +7,8 @@ import 'package:checkin/screens/student_home.dart';
 import 'package:checkin/utils/apis_list.dart';
 import 'package:flutter/material.dart';
 
+import '../models/user_model.dart';
+
 class User_Profile extends StatefulWidget {
   const User_Profile({super.key});
 
@@ -15,15 +17,19 @@ class User_Profile extends StatefulWidget {
 }
 
 class _User_ProfileState extends State<User_Profile> {
-
-  Logout(){
-     Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreen()),
-                  );
-    // logout();
+ Profile? _profile; 
+  @override
+void initState() {
+  super.initState();
+  loadProfileData();
   }
+
+  Future<void> loadProfileData() async {
+  final profile = await profileData();
+   setState(() {
+      _profile = profile; // assign the value of profile to _profile
+    });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,11 +69,11 @@ class _User_ProfileState extends State<User_Profile> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Center(child: Column(children: const <Widget>[
-              Text("Stepehen Muraya",style: TextStyle(fontWeight: FontWeight.w600,fontStyle: FontStyle.italic),),
-              Text("gathaiya28@gmail.com",style: TextStyle(fontStyle: FontStyle.italic,color: Colors.blue),),
+            child: Center(child: Column(children:  <Widget>[
+              Text(_profile?.first_name ?? '',style: TextStyle(fontWeight: FontWeight.w600,fontStyle: FontStyle.italic),),
+              Text(_profile?.email?? '',style: TextStyle(fontStyle: FontStyle.italic,color: Colors.blue),),
               Text("J17/MNU/033/2017",style: TextStyle(fontStyle: FontStyle.italic)),
-              Text("0798230245",style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
+              Text(_profile?.phone_number?? '',style: TextStyle(fontWeight: FontWeight.w300,fontStyle: FontStyle.italic)),
             ]),),
           ),
      
@@ -195,11 +201,18 @@ class _User_ProfileState extends State<User_Profile> {
             ),
           ),  Card(child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Row(children: const <Widget>[
+            child: Row(children:  <Widget>[
                   Expanded(child: Center(child: Text("Check-In V 1.0"))),
-                  Image(image: AssetImage("assets/images/exit.png"),
-                              height: 40,
-                            )],),
+                
+                  GestureDetector(
+                    onTap: () {
+                      logout();
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                    },
+                    child: Image(image: AssetImage("assets/images/exit.png"),
+                                height: 40,
+                              ),
+                  )],),
           )),
           
           

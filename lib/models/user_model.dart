@@ -7,6 +7,23 @@ class User {
   User(this.password, this.email);
 }
 
+class Profile{
+  late String first_name;
+  late String  last_name;
+  late String email;
+  late String phone_number;
+  Profile ({required this.first_name, required this.last_name, required this.email, required this.phone_number});
+factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      first_name: json['first_name'],
+      last_name: json['last_name'],
+      email:json['email'],
+      phone_number:json['phone_number'],
+    );
+  }
+  
+}
+
 class Institution {
   String id;
   String name;

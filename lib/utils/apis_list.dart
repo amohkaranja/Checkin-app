@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:checkin/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://admin.check-in.co.ke:6700/";
+const api = "https://d1be-105-163-158-157.in.ngrok.io/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data
@@ -37,7 +38,30 @@ void login(data, callback) async {
   callback(null, jsonResponse["message"]);
 }
 void logout() async{
-  print("hello");
+   final prefs = await SharedPreferences.getInstance();
+     var token= (prefs.getString("token"));
+  var url = Uri.parse("${api}api/auth/jwt/logout/");
+  await http.get(url,headers:  <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization':'Bearer ${token!}',
+      },);
+}
+
+Future<Profile> profileData() async {
+   final prefs = await SharedPreferences.getInstance();
+     var token= (prefs.getString("token"));
+  var url = Uri.parse("${api}api/auth/users/me");  await http.get(url,headers:  <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization':'Bearer ${token!}',
+      },);
+    var response=  await http.get(url,headers:  <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization':'Bearer ${token!}',
+      },);
+        var jsonResponse = convert.jsonDecode(response.body);
+        Profile profile= await  Profile.fromJson(jsonResponse);
+    return profile;
+
 }
 Future<bool> fetchDataAndSaveToPrefs() async {
   bool loading = true;
@@ -55,6 +79,8 @@ Future<bool> fetchDataAndSaveToPrefs() async {
   data["items"].forEach((item) {
     schools.add("${item['institution_name']}:${item['id']}");
   });
+
+
 }
 
   }
@@ -75,7 +101,6 @@ void post(dynamic data, String url, Function callback) async {
       body: jsonEncode(data));
 
   var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
-  print(jsonResponse);
   if (response.statusCode == 201) {
     // ignore: void_checks
     return callback("success", null);
