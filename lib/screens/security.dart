@@ -171,7 +171,11 @@ submit(){
                   setState(() {
                     _isPassword = true;
                   });
-                  return isPasswordValid(value);
+                  if(isPasswordValid(value)!=""){
+                    return isPasswordValid(value);
+                  }else{
+                    return null;
+                  };
                 }
               },
               onSaved: (value) => _password = value!,
@@ -222,10 +226,11 @@ submit(){
                   backgroundColor: const Color(0xff008346),
                 ),
                 onPressed: () {
-                  submit();
+                  
                   
                    if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
+                submit();
                 
               
               }
