@@ -2,6 +2,9 @@ import 'package:checkin/screens/student_home.dart';
 import 'package:checkin/screens/user_profile.dart';
 import 'package:flutter/material.dart';
 
+import '../models/user_model.dart';
+import '../utils/apis_list.dart';
+
 class ScannedClasses extends StatefulWidget {
   const ScannedClasses({super.key});
 
@@ -10,6 +13,7 @@ class ScannedClasses extends StatefulWidget {
 }
 
 class _ScannedClassesState extends State<ScannedClasses> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

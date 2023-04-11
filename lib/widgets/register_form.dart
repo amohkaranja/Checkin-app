@@ -27,40 +27,7 @@ void initState() {
   TextEditingController phoneController = TextEditingController();
    List<String> _institutions = []; // list of institutions
   late String? _selectedId = _institutions[0].split(":")[1]; // selected institution ID
-  isPasswordValid(String password) {
-    // Check if password is at least 8 characters long
-    if (password.length < 8) {
-      return "password must be at least 8 characters long";
-    }
-
-    // Check if password contains at least one special character
-    RegExp specialCharRegex = RegExp(r'[!@#\$&\*~-]');
-    if (!specialCharRegex.hasMatch(password)) {
-      return "password must contains at least one special character";
-    }
-
-    // Check if password contains at least two digits
-    RegExp digitRegex = RegExp(r'\d.*\d');
-    if (!digitRegex.hasMatch(password)) {
-      return "password must contains at least two digits";
-    }
-
-    // Check if password contains at least one uppercase letter
-    RegExp upperCaseRegex = RegExp(r'[A-Z]');
-    if (!upperCaseRegex.hasMatch(password)) {
-      return "password must contains at least one uppercase letter";
-    }
-
-    // Check if password contains at least one lowercase letter
-    RegExp lowerCaseRegex = RegExp(r'[a-z]');
-    if (!lowerCaseRegex.hasMatch(password)) {
-      return "password must contains at least one lowercase letter";
-    }
-
-    // If all conditions are met, return true
-    // return null;
-  }
-
+ 
   // fetch institutions from URL
 
    
