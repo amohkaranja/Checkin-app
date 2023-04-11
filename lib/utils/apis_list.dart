@@ -13,7 +13,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://7069-105-163-158-123.ngrok-free.app/";
+const api = "https://c566-102-219-210-194.ngrok-free.app/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data

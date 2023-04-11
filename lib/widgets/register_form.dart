@@ -505,9 +505,10 @@ void initState() {
               backgroundColor: const Color(0xff008346),
             ),
             onPressed: () {
-              submit();
+              
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
+                submit();
                 // Use _username and _password to log in
               }
             },
