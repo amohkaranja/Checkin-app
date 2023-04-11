@@ -13,7 +13,7 @@ class Api {
   String registerUser = "${dotenv.env['API_KEY']}api/auth/users/";
 }
 
-const api = "https://d1be-105-163-158-157.in.ngrok.io/";
+const api = "https://7069-105-163-158-123.ngrok-free.app/";
 // ignore: non_constant_identifier_names
 /// login function
 /// @param {JSON} data
@@ -47,13 +47,11 @@ void logout() async{
       },);
 }
 
+
 Future<Profile> profileData() async {
    final prefs = await SharedPreferences.getInstance();
      var token= (prefs.getString("token"));
-  var url = Uri.parse("${api}api/auth/users/me");  await http.get(url,headers:  <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization':'Bearer ${token!}',
-      },);
+  var url = Uri.parse("${api}api/auth/users/me"); 
     var response=  await http.get(url,headers:  <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization':'Bearer ${token!}',
@@ -93,10 +91,13 @@ Future<bool> fetchDataAndSaveToPrefs() async {
 
 
 void post(dynamic data, String url, Function callback) async {
+   final prefs = await SharedPreferences.getInstance();
+     var token= (prefs.getString("token"));
   var apiUrl = Uri.parse(api + url);
   var response = await http.post(apiUrl,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization':'Bearer ${token!}',
       },
       body: jsonEncode(data));
 
@@ -107,3 +108,57 @@ void post(dynamic data, String url, Function callback) async {
   }
   callback(null, jsonResponse["message"]);
 }
+void get(String url,Function callback) async{
+ final prefs = await SharedPreferences.getInstance();
+     var token= (prefs.getString("token"));
+  var url = Uri.parse("${api}api/auth/users/me"); 
+    var response=  await http.get(url,headers:  <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization':'Bearer ${token!}',
+      },);
+  // print(response);
+  var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+  // ignore: avoid_print
+  if (response.statusCode == 200) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("token",jsonResponse["access"]);
+    // ignore: void_checks
+    return callback(jsonResponse["message"], null);
+  }
+  callback(null, jsonResponse["message"]);
+}
+
+String  isPasswordValid(String password) {
+    // Check if password is at least 8 characters long
+    if (password.length < 8) {
+      return "password must be at least 8 characters long";
+    }
+
+    // Check if password contains at least one special character
+    RegExp specialCharRegex = RegExp(r'[!@#\$&\*~-]');
+    if (!specialCharRegex.hasMatch(password)) {
+      return "password must contains at least one special character";
+    }
+
+    // Check if password contains at least two digits
+    RegExp digitRegex = RegExp(r'\d.*\d');
+    if (!digitRegex.hasMatch(password)) {
+      return "password must contains at least two digits";
+    }
+
+    // Check if password contains at least one uppercase letter
+    RegExp upperCaseRegex = RegExp(r'[A-Z]');
+    if (!upperCaseRegex.hasMatch(password)) {
+      return "password must contains at least one uppercase letter";
+    }
+
+    // Check if password contains at least one lowercase letter
+    RegExp lowerCaseRegex = RegExp(r'[a-z]');
+    if (!lowerCaseRegex.hasMatch(password)) {
+      return "password must contains at least one lowercase letter";
+    }
+
+    // If all conditions are met, return true
+          return "";
+
+  }

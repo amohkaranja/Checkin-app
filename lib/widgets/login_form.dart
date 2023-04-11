@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
                   )
                 : Container(height: 1),
             TextFormField(
-              initialValue: "adminuser@email.com",
+              initialValue: "studentuser@email.com",
               decoration: InputDecoration(
                   labelText: 'Username',
                  
@@ -93,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
               height: 10.0,
             ),
             TextFormField(
-              initialValue: "admin1234",
+              initialValue: "student9876",
               decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
